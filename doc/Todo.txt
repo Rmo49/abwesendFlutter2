@@ -1,0 +1,19 @@
+Fehler:
+- Wenn Abwesend-Eintrag ein Komman enthält, dann wird nichts mehr angezeigt.
+
+- SpielerShort Id ist String, warum?
+- Bei Spieler und Tableau wurde vorher int.parse aufgerufenm hat da die Library geändert?
+
+- localStorage speichern der Passworte einlesen von Datei, die nicht eingechecked wird.
+
+- Abwesenheiten eintragen:
+    - Zeilen bezeichnen: Datum, Spiele, Grafisch, neuer Wert
+	- Werte: 0 = kann an diesem Tag nicht, -18 kann bis 18 Uhr nicht spielen, 20- kann nach 20 Uhr nicht spielen.
+
+- Wenn Config-Data ändern will, Fehler: Bad Request in Feld 'neuer Wert', Anzeigen warum nicht
+
+- Bei Einstellungen, Anzeige von bis
+- Tableau: Wieviele Spieler in diesem Tableau?
+
+- Tableau löschen nicht möglich, 'spielerTableau' foreign key (tableauID) references 'tableau' (tableauID)
+

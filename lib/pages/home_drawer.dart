@@ -31,7 +31,7 @@ class HomeDrawer {
               onPressed: () {
                 Navigator.pushNamed(context, '/einstellungen', arguments: {});
               },
-              child: Row(children: const <Widget>[
+              child: const Row(children: <Widget>[
                 Icon(Icons.settings),
                 Text(
                   '  Einstellungen',
@@ -48,7 +48,7 @@ class HomeDrawer {
                   'tableauID': -1,
                 });
               },
-              child: Row(children: const <Widget>[
+              child: const Row(children: <Widget>[
                 Icon(Icons.article_outlined),
                 Text(
                   '  Tableau verwalten',
@@ -63,7 +63,7 @@ class HomeDrawer {
               onPressed: () {
                 Navigator.pushNamed(context, '/config_data', arguments: {});
               },
-              child: Row(children: const <Widget>[
+              child: const Row(children: <Widget>[
                 Icon(Icons.apps),
                 Text(
                   ' Config verwalten',
@@ -76,7 +76,7 @@ class HomeDrawer {
             padding: const EdgeInsets.all(5),
             child: TextButton(
               onPressed: () => _passwortAendern(context),
-              child: Row(children: const <Widget>[
+              child: const Row(children: <Widget>[
                 Icon(Icons.accessibility),
                 Text(
                   ' Passwort ändern',

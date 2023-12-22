@@ -5,7 +5,7 @@ import 'package:abwesend/model/globals.dart' as global;
 import 'package:intl/intl.dart';
 
 class Einstellungen extends StatefulWidget {
-  const Einstellungen({Key? key}) : super(key: key);
+  const Einstellungen({super.key});
 
   @override
   EinstellungenState createState() => EinstellungenState();

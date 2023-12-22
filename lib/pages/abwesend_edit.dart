@@ -5,7 +5,7 @@ import 'package:abwesend/pages/abwesend_base.dart';
 
 /// Die Abwesenheiten ändern
 class AbwesendEdit extends StatefulWidget {
-  const AbwesendEdit({Key? key}) : super(key: key);
+  const AbwesendEdit({super.key});
 
   @override
   AbwesendEditState createState() => AbwesendEditState();

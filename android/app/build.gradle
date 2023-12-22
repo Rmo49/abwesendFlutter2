@@ -25,6 +25,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
@@ -47,12 +53,41 @@ android {
         applicationId "ch.nomadus.abwesend"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 26
+        minSdkVersion 19
         targetSdkVersion 33
-        versionCode 25
-        versionName 1.25.0
+        versionCode 29
+        versionName "1.29.0"
+        // Tip von Entwickler-Konsolen, damit nicht zu gross wird
+        //resConfig "en", "de"
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            // Gemäss Anleitung https://docs.flutter.dev/deployment/android#signing-the-app
+            signingConfig signingConfigs.release
+            // Gemäss Anleitung von Entwickler-Konsole
+            // https://developer.android.com/build/shrink-code#groovy
+            shrinkResources true
+            minifyEnabled true
+            // eingefügt nach Fehermeldung in der Play Console
+            // Dieses App Bundle enthält nativen Code
+            // und du hast keine Symbole zum Debuggen hochgeladen
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
+        }
+    }
+
+    /*
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -60,6 +95,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+     */
 }
 
 flutter {

@@ -7,7 +7,7 @@ import 'package:abwesend/model/globals.dart' as global;
 
 /// Alle Abwesenheiten anzeigen
 class AbwesendShow extends StatefulWidget {
-  const AbwesendShow({Key? key}) : super(key: key);
+  const AbwesendShow({super.key});
 
   @override
   AbwesendShowState createState() => AbwesendShowState();

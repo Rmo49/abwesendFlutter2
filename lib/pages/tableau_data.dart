@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TableauData extends StatefulWidget {
-  const TableauData({Key? key}) : super(key: key);
+  const TableauData({super.key});
 
   @override
   TableauDataState createState() => TableauDataState();

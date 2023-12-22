@@ -18,7 +18,7 @@ class AbwesendTable extends StatelessWidget {
   final List<Spieler?>? spielerList;
 
   // Konstruktor
-  AbwesendTable({Key? key, this.spielerList}) : super(key: key);
+  AbwesendTable({super.key, this.spielerList});
 
   @override
   Widget build(BuildContext context) {

@@ -16,7 +16,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  MyApp({super.key});
   
   // Anzeige der Buttons
   final ButtonStyle elevatedButtonStyle = ElevatedButton.styleFrom(

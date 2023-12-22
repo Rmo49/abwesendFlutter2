@@ -2,7 +2,7 @@ import 'package:abwesend/model/config.dart';
 import 'package:flutter/material.dart';
 
 class ConfigData extends StatefulWidget {
-  const ConfigData({Key? key}) : super(key: key);
+  const ConfigData({super.key});
 
   @override
   ConfigDataState createState() => ConfigDataState();

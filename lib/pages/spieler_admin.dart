@@ -7,7 +7,7 @@ import 'package:abwesend/model/globals.dart' as global;
 /// Einen Spieler ändern, löschen, Beziehung zu Tableau setzen
 /// Der Spieler ist der erste selektierte in der Liste von home.
 class SpielerAdmin extends StatefulWidget {
-  const SpielerAdmin({Key? key}) : super(key: key);
+  const SpielerAdmin({super.key});
 
   @override
   SpielerAdminState createState() => SpielerAdminState();

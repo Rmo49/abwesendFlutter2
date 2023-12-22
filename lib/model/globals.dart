@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // Der Titel, der angezeigt wird
-const String titel = "TCA CM (1.25.0)";
+const String titel = "TCA CM (1.29.0)";
 // Werte initialisieren 0=Internet, 1=lokal
 const int initWerte = 0;
 

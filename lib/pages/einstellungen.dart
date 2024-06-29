@@ -62,7 +62,7 @@ class EinstellungenState extends State<Einstellungen> {
         children: <Widget>[
           const Text(' '),
           const Text(
-            'Anzeige',
+            'Anzeige der Abwesenheiten',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           SingleChildScrollView(
@@ -72,6 +72,7 @@ class EinstellungenState extends State<Einstellungen> {
                   .min, // this will take space as minimum as posible(to center)
               buttonHeight: 25.0,
               buttonPadding: const EdgeInsets.all(2.0),
+              // die Liste mit den Buttons
               children: _getDatumButtons(),
             ),
           ),
@@ -105,7 +106,8 @@ class EinstellungenState extends State<Einstellungen> {
           },
         ),
       );
-      datum = datum.add(const Duration(days: 2));
+      // die Spanne zwischen Daten
+      datum = datum.add(const Duration(days: 1));
     }
     return list;
   }

@@ -194,7 +194,7 @@ class HomeDrawer {
   void _savePassword() async {
     LocalStorage localStorage = LocalStorage();
     try {
-      final response = await http.post(MyUri.getUri("/userSet.php"), body: {
+      final response = await http.post(MyUri.getUri("/userSetPw.php"), body: {
         "userName": global.userName,
         "passwortAlt": localStorage.userPw,
         "passwort": txtPasswort.text,

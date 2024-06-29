@@ -16,7 +16,12 @@ class Config {
   static const String weekEndZeit = 'week.endZeit';
   static const String weekendBeginZeit = 'weekend.beginZeit';
   static const String weekendEndZeit = 'weekend.endZeit';
+  static const String zeitStart = 'zeit.start';
+  static const String zeitEnde = 'zeit.ende';
+  static const String dayBeginZeit = 'day.beginZeit';
+  static const String dayEndZeit = 'day.endZeit';
   static const String spielerListeMax = 'spieler.liste.max';
+
 
 
   /// Die Configuration von DB lesen, die Daten werden in json-format geliefert
@@ -63,6 +68,9 @@ class Config {
     global.zeitWeekEnd = _parseDouble(weekEndZeit);
     global.zeitWeekendBegin = _parseDouble(weekendBeginZeit);
     global.zeitWeekendEnd = _parseDouble(weekendEndZeit);
+    // die Zeiten pro Tag
+    global.zeitStart = _parseZeiten(zeitStart);
+    global.zeitEnde = _parseZeiten(zeitEnde);
     global.spielerListMax = _parseInt(spielerListeMax);
     return "";
   }
@@ -74,9 +82,29 @@ class Config {
        dt = global.dateFormDb.parse(configMap![key]);
     }
     else {
+      // wenn key noch nicht in configMap
       configMap!.addEntries([MapEntry(key, dt.toString())]);
     }
     return dt;
+  }
+
+  /// Den Array füllen mit den Zeiten
+  static List<int> _parseZeiten(String key) {
+    List<String> dayListStr;
+    List<int> dayList = [];
+    if (configMap!.containsKey(key)) {
+      // TODO hier Liste übertragen
+      String dayStr = configMap![key];
+      dayListStr = dayStr.split(";");
+      for (int i = 0; i < global.arrayLenMax; i++) {
+        dayList.add(int.parse(dayListStr[i]));
+      }
+    }
+    else {
+      // wenn key noch nicht in configMap
+      configMap!.addEntries([MapEntry(key, ";")]);
+    }
+    return dayList;
   }
 
   /// Den Eintrag in Map prüfen, wenn nicht vorhanden, wird angelegt
@@ -124,9 +152,10 @@ class Config {
         "configWert": value
       });
       if (response.statusCode == 200) {
-        message = "OK gespeichert";
+          message = response.reasonPhrase as String;
+          // message = "OK gespeichert";
       } else {
-        message = response.reasonPhrase as String;
+        message = "Du darft nicht ändern";
       }
     } catch (e) {
       debugPrint('Fehler in saveConfig:  $e');

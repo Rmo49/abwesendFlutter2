@@ -108,7 +108,7 @@ class LocalStorage {
     }
     if (global.initWerte == 1) {
       scheme = "http";
-      host = "192.168.0.59";
+      host = "localhost";
       port = int.parse("8081");
       path = "tca/db";
       database = 'tennis';

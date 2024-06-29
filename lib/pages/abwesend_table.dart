@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:abwesend/model/spieler.dart';
+import 'package:abwesend/pages/abwesend_base.dart';
 import 'package:abwesend/model/globals.dart' as global;
 
 /// zeigt die Tabelle Abwesend aller Spieler
@@ -75,12 +76,13 @@ class AbwesendTable extends StatelessWidget {
     );
   }
 
-  /// Zeile Datum
+  /// Die erste Zeile mit Datum
   TableRow getRowDatum(BuildContext context, String header, DateTime? startDatum) {
     return TableRow(children: getCellsDatum(context, header, startDatum));
   }
 
   /// alle Zellen mit einem Datum
+  /// header: Bezeichnung in der ersten Spalte
   List<TableCell> getCellsDatum(BuildContext context, String header, DateTime? startDatum) {
     // Die Zeile mit dem Datum
     DateTime? datum = startDatum;
@@ -125,6 +127,7 @@ class AbwesendTable extends StatelessWidget {
     return TableRow(children: _getCellAbwesend(context, header, abwesendList));
   }
 
+  /// Alle Zellen für einen Spieler
   List<TableCell> _getCellAbwesend(BuildContext context, String header, List abwesendList) {
     List<TableCell> list = [];
     list.add(TableCell(
@@ -158,14 +161,14 @@ class AbwesendTable extends StatelessWidget {
       spieler.name!, style: Theme.of(context).textTheme.labelLarge,
           overflow: TextOverflow.ellipsis,
     )));
-    for (int i = global.arrayStart; i < global.arrayEnd; i++) {
-      if (i < abwesendList.length) {
-        String abwTag = abwesendList[i];
+    for (int dayNr = global.arrayStart; dayNr < global.arrayEnd; dayNr++) {
+      if (dayNr < abwesendList.length) {
+        String abwTag = abwesendList[dayNr];
         abwTag = abwTag.trim();
-        double abwStart = _getPosStart(abwTag, isWeekend(i));
-        double abwEnd = _getPosEnd(abwTag, isWeekend(i), abwStart);
+        double abwStart = AbwesendBase.getPosStart(abwTag, dayNr);
+        double abwEnd = AbwesendBase.getPosEnd(abwTag, dayNr, abwStart);
         // matches, wenn von diesem Tag
-        List<MatchDisplay> matchDisplayList = _getMatches(spieler, i);
+        List<MatchDisplay> matchDisplayList = AbwesendBase.getMatches(spieler, dayNr);
         MyPainter painter = MyPainter(abwStart, abwEnd, matchDisplayList);
         list.add(
           TableCell(
@@ -179,93 +182,7 @@ class AbwesendTable extends StatelessWidget {
     return list;
   }
 
-  /// Gibt für einen Tag in der Liste die Matches zurück
-  List<MatchDisplay> _getMatches(Spieler spieler, int day) {
-    List<MatchDisplay> matchDispalyList = [];
-    for (int i = 0; i < spieler.matches.length; i++) {
-      MatchDisplay matchDisplay;
-      // wenn Spiele an diesem Tag
-      if (spieler.matches.elementAt(i).day == day) {
-        double pos = _getPosTime(spieler.matches[i].time!, isWeekend(day));
-        if (pos >= 0.8) {
-          pos = 0.8;
-        }
-        matchDisplay = MatchDisplay(pos, spieler.matches[i].type);
-        matchDispalyList.add(matchDisplay);
-      }
-    }
-    return matchDispalyList;
-  }
 
-  /// Berechnet die Start Position, 0..1 innerhalb der Zeitspannen
-  /// von Start-Zeit und Ende
-  double _getPosStart(String abwTag, bool isWeekend) {
-    if (abwTag.isEmpty) {
-      // nichts zeichnen
-      return 1;
-    }
-    if (abwTag.startsWith('-') || (abwTag.compareTo('0') == 0)) {
-      return 0;
-    }
-    int posEnd = abwTag.indexOf('-');
-    if (posEnd > 0) {
-      String zeit = abwTag.substring(0, posEnd);
-      if (zeit.isNotEmpty) {
-        return _getPosTime(zeit, isWeekend);
-      }
-    } else {
-      // kein '-' gefunden
-      return 0;
-    }
-    return 1.0;
-  }
-
-  /// Berechnet die End Position, von 0..1 innerhalb der Zeitspannen
-  /// von Start-Zeit und Ende
-  double _getPosEnd(String abwTag, bool isWeekend, double posStart) {
-    if (posStart >= 1) {
-      // nichts zeichnen
-      return 1.0;
-    }
-    if (abwTag.compareTo('0') == 0) {
-      return 1.0;
-    }
-    if (abwTag.startsWith('-')) {
-      String zeit = abwTag.substring(abwTag.indexOf('-') + 1, abwTag.length);
-      if (zeit.isNotEmpty) {
-        return _getPosTime(zeit, isWeekend);
-      }
-    }
-    return 1.0;
-  }
-
-  /// Die Position von 0..1 innerhalb der Zeitspannen
-  /// wenn 1 dann ausserhalb der Zeitspanne
-  double _getPosTime(String time, bool isWeekend) {
-    // wenn Zeit 18:30, dann minuten weglassen
-    int index = time.indexOf(':');
-    if (index > 0) {
-      time = time.substring(0, index);
-    }
-    index = time.indexOf('.');
-    if (index > 0) {
-      time = time.substring(0, index);
-    }
-
-    double pos = 1.0;
-    int zeit = int.parse(time);
-    if (isWeekend) {
-      pos = (zeit - global.zeitWeekendBegin) /
-          (global.zeitWeekendEnd - global.zeitWeekendBegin);
-    } else {
-      pos = (zeit - global.zeitWeekBegin) /
-          (global.zeitWeekEnd - global.zeitWeekBegin);
-    }
-    if (pos < 0) {
-      pos = 0.0;
-    }
-    return pos;
-  }
 
   /// Ist die Position im Array ein Weekend?
   bool isWeekend(int pos) {
@@ -277,44 +194,4 @@ class AbwesendTable extends StatelessWidget {
   }
 }
 
-//-------------------------
-/// Der Painter für die grafische Dartstellung
-class MyPainter extends CustomPainter {
-  final double posStart;
-  final double posEnd;
-  final List<MatchDisplay> matchDisplayList;
-  // Konstruktor
-  MyPainter(this.posStart, this.posEnd, this.matchDisplayList);
 
-  final painterAbw = Paint()..color = global.colorAbw;
-  final painterEinzel = Paint()..color = global.colorEinzel;
-  final painterDoppel = Paint()..color = global.colorDoppel;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (posStart < 1) {
-      double left = posStart * size.width;
-      double width = (posEnd * size.width) - left;
-      canvas.drawRect(Rect.fromLTWH(left, 0.0, width, size.height), painterAbw);
-    }
-    if (matchDisplayList.isNotEmpty) {
-      for (var match in matchDisplayList) {
-        if (match.pos < 1) {
-          double left = match.pos * size.width;
-          if (match.type!.contains('E')) {
-            canvas.drawRect(
-                Rect.fromLTWH(left, 0.0, 8, size.height), painterEinzel);
-          } else {
-            canvas.drawRect(
-                Rect.fromLTWH(left, 0.0, 8, size.height), painterDoppel);
-          }
-        }
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
-  }
-}

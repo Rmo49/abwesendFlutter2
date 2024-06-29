@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // Der Titel, der angezeigt wird
-const String titel = "TCA CM (1.29.0)";
+const String titel = "TCA CM (1.30.0)";
 // Werte initialisieren 0=Internet, 1=lokal
-const int initWerte = 0;
+const int initWerte = 1;
 
 // das Datenformat in der DB
 final DateFormat dateFormDb = DateFormat('yyyy-MM-dd');
@@ -41,7 +41,7 @@ int arrayStart = 0;
 const int arrayLenMaxAbsolut = 21;
 // die Länge des Arrays (Anzahl cols) für ganze Periode
 int arrayLenMax = arrayLenMaxAbsolut;
-// die Länge des Arrays (Anzahl cols) für dei aktuelle display-Breite
+// die Länge des Arrays (Anzahl cols) für die aktuelle display-Breite
 int arrayEnd = 0;
 // die selektierte TableauId im Tableau-Screen
 // Ersatz für modale transformation, da im build zu spät
@@ -59,6 +59,9 @@ double zeitWeekBegin = 17.0;
 double zeitWeekEnd = 22.0;
 double zeitWeekendBegin = 10.0;
 double zeitWeekendEnd = 17.0;
+// Anfang und End-Zeit pro Tag
+List<int> zeitStart = [];
+List<int> zeitEnde = [];
 // die Farben bei der grafischen Anzeige
 const Color colorAbw = Color(0xFFFF5722);
 const Color colorEinzel = Color(0xFF046EF9);

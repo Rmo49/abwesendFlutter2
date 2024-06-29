@@ -12,8 +12,8 @@ class AppInfo {
 
   void showAppInfo(BuildContext context) async {
     if (kIsWeb) {
-      version = "1.29.0";
-      buildNumber = "29";
+      version = "1.30.0";
+      buildNumber = "30";
     } else {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 

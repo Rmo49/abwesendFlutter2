@@ -1,6 +1,8 @@
 import 'package:abwesend/model/config.dart';
 import 'package:flutter/material.dart';
 
+/// Alle Configdaten in Form einer Tabelle anzeigen
+/// Mit Eingagefeld und einer Tabelle mit allen Daten
 class ConfigData extends StatefulWidget {
   const ConfigData({super.key});
 
@@ -75,7 +77,7 @@ class ConfigDataState extends State<ConfigData> {
         ]));
   }
 
-  // Die Liste alle Tableau
+  /// Die Liste als Tableau mit Zellen
   List<DataRow> _getConfigRows() {
     List<DataRow> rowList = [];
     Config.configMap!.forEach((key, value) {

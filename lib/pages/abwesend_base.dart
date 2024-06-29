@@ -18,11 +18,14 @@ class AbwesendBase {
       list.add(
         TableCell(
             child: Container(
-          color: isWeekend(i) ? Colors.grey : Colors.white,
+              color: isWeekend(i) ? Colors.grey : Colors.white,
               child:
-                Text(dateFormList.format(datum!),
-                style: Theme.of(context).textTheme.labelLarge),
-        )),
+              Text(dateFormList.format(datum!),
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .labelLarge),
+            )),
       );
       datum = datum.add(const Duration(days: 1));
     }
@@ -47,8 +50,11 @@ class AbwesendBase {
         list.add(
           TableCell(child:
           Text(abwesendList[i],
-              style: Theme.of(context).textTheme.labelLarge),
-    ),
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .labelLarge),
+          ),
         );
       }
     }
@@ -56,8 +62,8 @@ class AbwesendBase {
   }
 
   /// Abwesenheiten grafisch
-  static List<TableCell> getCellsGrafik(
-      Spieler? spieler, List? abwesendList, int von, int bis) {
+  static List<TableCell> getCellsGrafik(Spieler? spieler, List? abwesendList,
+      int von, int bis) {
     List<TableCell> list = [];
     // dazufügen wegen header
     if (von < 0) {
@@ -65,21 +71,21 @@ class AbwesendBase {
       von++;
     }
 
-    for (int i = von; i < bis; i++) {
-      if (i < abwesendList!.length) {
-        String abwTag = abwesendList[i];
+    for (int dayNr = von; dayNr < bis; dayNr++) {
+      if (dayNr < abwesendList!.length) {
+        String abwTag = abwesendList[dayNr];
         abwTag = abwTag.trim();
-        double abwStart = getPosStart(abwTag, isWeekend(i));
-        double abwEnd = getPosEnd(abwTag, isWeekend(i), abwStart);
+        double abwStart = getPosStart(abwTag, dayNr);
+        double abwEnd = getPosEnd(abwTag, dayNr, abwStart);
         // matches, wenn von diesem Tag
-        List<MatchDisplay> matchDisplayList = getMatches(spieler!, i);
+        List<MatchDisplay> matchDisplayList = getMatches(spieler!, dayNr);
         MyPainter painter = MyPainter(abwStart, abwEnd, matchDisplayList);
         list.add(
           TableCell(
               child: SizedBox(
-            height: 20.0,
-            child: CustomPaint(painter: painter),
-          )),
+                height: 20.0,
+                child: CustomPaint(painter: painter),
+              )),
         );
       }
     }
@@ -87,13 +93,15 @@ class AbwesendBase {
   }
 
   /// Gibt für einen Tag in der Liste die Matches zurück
-  static List<MatchDisplay> getMatches(Spieler spieler, int day) {
+  static List<MatchDisplay> getMatches(Spieler spieler, int dayNr) {
     List<MatchDisplay> matchDispalyList = [];
     for (int i = 0; i < spieler.matches.length; i++) {
       MatchDisplay matchDisplay;
       // wenn Spiele an diesem Tag
-      if (spieler.matches.elementAt(i).day == day) {
-        double pos = getPosTime(spieler.matches[i].time!, isWeekend(day));
+      if (spieler.matches
+          .elementAt(i)
+          .day == dayNr) {
+        double pos = getPosTime(spieler.matches[i].time!, dayNr);
         if (pos >= 0.8) {
           pos = 0.8;
         }
@@ -104,21 +112,24 @@ class AbwesendBase {
     return matchDispalyList;
   }
 
+
   /// Berechnet die Start Position, 0..1 innerhalb der Zeitspannen
   /// von Start-Zeit und Ende
-  static double getPosStart(String abwTag, bool isWeekend) {
+  static double getPosStart(String abwTag, int dayNr) {
     if (abwTag.isEmpty) {
       // nichts zeichnen
       return 1;
     }
+    // wenn am Anfang fehlt
     if (abwTag.startsWith('-') || (abwTag.compareTo('0') == 0)) {
       return 0;
     }
+    // wenn "18-", dann ist Anfang > 0
     int posEnd = abwTag.indexOf('-');
     if (posEnd > 0) {
       String zeit = abwTag.substring(0, posEnd);
       if (zeit.isNotEmpty) {
-        return getPosTime(zeit, isWeekend);
+        return getPosTime(zeit, dayNr);
       }
     } else {
       // kein '-' gefunden
@@ -129,7 +140,7 @@ class AbwesendBase {
 
   /// Berechnet die End Position, von 0..1 innerhalb der Zeitspannen
   /// von Start-Zeit und Ende
-  static double getPosEnd(String abwTag, bool isWeekend, double posStart) {
+  static double getPosEnd(String abwTag, int dayNr, double posStart) {
     if (posStart >= 1) {
       // nichts zeichnen
       return 1.0;
@@ -140,7 +151,7 @@ class AbwesendBase {
     if (abwTag.startsWith('-')) {
       String zeit = abwTag.substring(abwTag.indexOf('-') + 1, abwTag.length);
       if (zeit.isNotEmpty) {
-        return getPosTime(zeit, isWeekend);
+        return getPosTime(zeit, dayNr);
       }
     }
     return 1.0;
@@ -148,32 +159,34 @@ class AbwesendBase {
 
   /// Die Position von 0..1 innerhalb der Zeitspannen
   /// wenn 1 dann ausserhalb der Zeitspanne
-  static double getPosTime(String time, bool isWeekend) {
-    // wenn Zeit 18:30, dann minuten weglassen
-    int index = time.indexOf(':');
-    if (index > 0) {
-      time = time.substring(0, index);
-    }
-    index = time.indexOf('.');
+  static double getPosTime(String time, int dayNr) {
+    // wenn Zeit "18:30", dann Minuten weglassen
+    int index = time.indexOf(RegExp('[:.,]'));
     if (index > 0) {
       time = time.substring(0, index);
     }
 
+    int zeit = 0;
     double pos = 1.0;
-    int zeit = int.parse(time);
-    if (isWeekend) {
-      pos = (zeit - global.zeitWeekendBegin) /
-          (global.zeitWeekendEnd - global.zeitWeekendBegin);
-    } else {
-      pos = (zeit - global.zeitWeekBegin) /
-          (global.zeitWeekEnd - global.zeitWeekBegin);
+    try {
+      zeit = int.parse(time);
     }
+    on FormatException {
+      // nix machen
+    }
+    // die Funktion muss wissen welcher Tag es betrifft
+    pos = (zeit - global.zeitStart[dayNr]) /
+        (global.zeitEnde[dayNr] - global.zeitStart[dayNr]);
     if (pos < 0) {
       pos = 0.0;
+    }
+    if (pos > 1) {
+      pos = 1.0;
     }
     return pos;
   }
 }
+
 
 //-------------------------
 /// Der Painter für die grafische Dartstellung

@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "TCA Turnierplanung Abwesenheiten",
+    "description": "TCA Turnierplanung Abwesenheiten.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

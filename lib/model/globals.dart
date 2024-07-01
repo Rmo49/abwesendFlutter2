@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // Der Titel, der angezeigt wird
-const String titel = "TCA CM (1.30.0)";
+const String titel = "TCA CM (1.31.0)";
 // Werte initialisieren 0=Internet, 1=lokal
-const int initWerte = 1;
+const int initWerte = 0;
 
 // das Datenformat in der DB
 final DateFormat dateFormDb = DateFormat('yyyy-MM-dd');

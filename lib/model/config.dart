@@ -153,7 +153,9 @@ class Config {
       });
       if (response.statusCode == 200) {
           message = response.reasonPhrase as String;
-          // message = "OK gespeichert";
+          if (message.isEmpty) {
+            message = "OK gespeichert";
+          }
       } else {
         message = "Du darft nicht ändern";
       }

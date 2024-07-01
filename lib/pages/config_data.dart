@@ -110,7 +110,7 @@ class ConfigDataState extends State<ConfigData> {
       String message = await Config.saveConfig(_selectedKey, _txtValue.text);
       if (message.startsWith('OK')) {
         Config.updateConfig(_selectedKey, _txtValue.text);
-      }
+        await Config.readConfig();      }
       _txtValue.text = message;
     }
     setState(() {

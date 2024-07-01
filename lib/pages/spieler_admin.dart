@@ -303,7 +303,7 @@ class SpielerAdminState extends State<SpielerAdmin> {
 
       // ignore: use_build_context_synchronously
       AlertPopup alert = AlertPopup(
-          'Spieler speichern', '${_spieler!.name!} gespeichert', context);
+          'Spieler gespeichert', "${_spieler!.name!} <= gespeichert", context);
       await alert.showMyDialog();
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, '/home');

@@ -58,11 +58,20 @@ class Spieler {
   }
 
   /// Die Liste der Tableau setzen, falls gelesen
-  _setTableaux(List<dynamic> data) {
+  _setTableaux(List data) {
     tableauList = [];
-    for (int i = 0; i < data.length; i++) {
-      String tabStr = data[i];
-      tableauList!.add(int.parse(tabStr));
+    try {
+      for (int i = 0; i < data.length; i++) {
+        dynamic wert = data[i];
+        if (wert is int) {
+          tableauList!.add(wert);
+        }
+        else if (wert is String) {
+          tableauList!.add(int.parse(wert));        }
+      }
+    }
+    catch (e) {
+      tableauList!.add(-1);
     }
   }
 
@@ -115,7 +124,7 @@ class Spieler {
       "spielerID": spielerID.toString(),
     });
     if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
+      final List data = json.decode(response.body);
       _setTableaux(data);
     }
   }
@@ -182,9 +191,12 @@ class SpielerList {
   List<SpielerShort> spielerAlle = [];
   // Spieler eines Tableau
   List<SpielerShort> spielerTableau = [];
+  List<SpielerShort> spielerListe = [];
+
 
   /// Kruzform aller Spieler von der DB lesen, diese werden in json-format geliefert
   Future<List<SpielerShort>> readAllSpielerShort() async {
+    String respError = "";
     try {
       final response =
           await http.post(MyUri.getUri("/readSpielerAll.php"), body: {
@@ -195,7 +207,7 @@ class SpielerList {
       });
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
-          // String resp = response.body;
+          respError = response.body;
           List spielerFromDb = json.decode(response.body);
           spielerAlle = _setSpielerData(spielerFromDb);
         } else {
@@ -206,7 +218,8 @@ class SpielerList {
       }
     } catch (e) {
       // Könnte sein, dass response eine Error-Message enthält
-      spielerAlle = _setSpielerError(e.toString());
+      spielerAlle = _setSpielerError(respError);
+      spielerAlle = _addSpielerError(e.toString());
     }
     return spielerAlle;
   }
@@ -261,9 +274,18 @@ class SpielerList {
   /// Die SpielerListe setzen, wenn keine Spieler gefunden,
   /// oder sonstige Fehler
   List<SpielerShort> _setSpielerError(String errorMessage) {
+    spielerListe.clear();
     SpielerShort spielerErr =
         SpielerShort('-1', "readAllSpielerShort $errorMessage", false);
-    List<SpielerShort> spielerListe = [];
+    spielerListe.add(spielerErr);
+    return spielerListe;
+  }
+
+  /// Die SpielerListe setzen, wenn keine Spieler gefunden,
+  /// oder sonstige Fehler
+  List<SpielerShort> _addSpielerError(String errorMessage) {
+     SpielerShort spielerErr =
+    SpielerShort('-1', "readAllSpielerShort $errorMessage", false);
     spielerListe.add(spielerErr);
     return spielerListe;
   }

@@ -75,7 +75,7 @@ class LoginState extends State<Login> {
         title: const Text(global.titel),
       ),
       body: Column(children: <Widget>[
-        Text('Verbindung zum Server',
+        Text('Verbindung zum Server / zur Homepage',
             style: Theme.of(context).textTheme.bodyLarge),
         Expanded(
           child: Row(
